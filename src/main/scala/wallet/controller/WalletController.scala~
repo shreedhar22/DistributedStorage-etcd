@@ -72,7 +72,7 @@ class WalletController{
   val currentTime = DateTime.now
 
 /*===========================================================================*/
-  var client: EtcdClient = new EtcdClient(URI.create("http://54.183.225.139:4001"))
+  var client: EtcdClient = new EtcdClient(URI.create("http://54.173.91.98:4001"))
   var countValue:EtcdResult=_
 /*===========================================================================*/
 
@@ -84,15 +84,27 @@ class WalletController{
 
 @RequestMapping(value = Array("api/v1/counter"), method = Array(RequestMethod.GET))
 @ResponseBody
-def setCounter() = {
+def setCounter():String = {
 
 	
-	var appkey: String = "/999999999/counter"
-	
-	var flag = false
-	//this.client.set(appkey,"1")
-       var result:EtcdResult=this.client.get(appkey)
-        println(result.node.value)
+	var appkey: String = "/009431799/counter"
+	var result:EtcdResult=this.client.get(appkey)
+        var counter_response:String =_ 
+	//var flag = false
+          if(result==null){
+             this.client.set(appkey,"1")           
+          }
+         else{
+           var res=result.node.value;
+           var int_count=res.toInt;
+           var setvalue_count=int_count+1;
+           this.client.set(appkey,setvalue_count.toString) 
+           var countValue:EtcdResult=this.client.get(appkey)
+           counter_response=countValue.node.value
+         }
+	 return(counter_response)
+       
+        //println(result.node.value)
 	/*try{
 		println("Sending: " + appkey)
 	var result:EtcdResult = this.client.get(appkey)
