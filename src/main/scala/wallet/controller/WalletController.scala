@@ -92,7 +92,9 @@ def setCounter():String = {
         var counter_response:String =""
 	//var flag = false
           if(result==null){
-             this.client.set(appkey,"1")           
+             this.client.set(appkey,"1") 
+             var initValue:EtcdResult=this.client.get(appkey)
+           counter_response=initValue.node.value           
           }
          else{
            var res=result.node.value;
